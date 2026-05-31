@@ -5,14 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deteksi Penyakit Kulit Kucing dengan AI</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Pustaka Analisis AI & Export PDF -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
     <div class="container">
-        <!-- HEADER / BANNER UTAMA -->
         <header class="banner">
             <div class="banner-text">
                 <h1>Deteksi Penyakit Kulit <br><span>pada Kucing</span> dengan AI</h1>
@@ -24,42 +22,29 @@
             </div>
         </header>
 
-        <!-- MAIN CONTENT -->
         <main class="main-content">
-            <!-- Kolom Kiri: Deteksi -->
             <section class="card upload-section">
                 <h2>🔍 Deteksi Penyakit Kulit</h2>
                 
-                <!-- Drop Zone / Kamera View -->
                 <div class="drop-zone" id="dropZone">
                     <div class="drop-zone-content" id="dropZoneContent">
                         <div class="icon-cloud">☁️</div>
                         <p><b>Klik atau seret foto ke sini untuk mengunggah</b></p>
                         <p class="format-text">Format: JPG, PNG, WEBP (Maks. 5MB)</p>
                     </div>
-                    
-                    <!-- Element Video untuk Live Kamera -->
-                    <video id="videoElement" autoplay playsinline hidden></video>
                     <input type="file" id="fileInput" accept="image/*" hidden>
                 </div>
 
-                <!-- Tombol Ambil Gambar saat Kamera Aktif -->
-                <button class="btn-primary" id="captureBtn" onclick="captureFromCamera()" style="display:none; width:100%; margin-top:10px;">📸 Ambil Foto Sekarang</button>
-
-                <div class="divider" id="uiDivider"><span>atau</span></div>
-
                 <div class="action-buttons" id="actionButtons">
-                    <button class="btn-secondary" onclick="openCamera()">📷 Aktifkan Kamera</button>
+                    <button class="btn-secondary" onclick="triggerUploadClick()">📁 Pilih Foto dari Galeri</button>
                 </div>
 
-                <!-- HASIL DIAGNOSA (Area Unduh PDF) -->
                 <div class="result-box" id="resultBox" hidden>
                     <div id="pdfArea" style="padding: 15px; background: #ffffff;">
                         <h3 class="report-title">📄 LAPORAN HASIL DIAGNOSA AI</h3>
                         <p class="report-date" id="reportDate"></p>
                         <hr style="border: 0; border-top: 1px solid #E2E8F0; margin: 10px 0;">
                         
-                        <!-- Gambar Kucing diletakkan di sini agar ikut masuk PDF -->
                         <div class="pdf-image-container">
                             <img id="imagePreview" src="" alt="Sampel Kulit Kucing">
                         </div>
@@ -70,39 +55,36 @@
                             <div class="progress-bar" id="progressBar">0%</div>
                         </div>
 
-                        <!-- Tips Penanganan -->
                         <div class="treatment-box" id="treatmentBox">
-                            <h5>Zx Langkah Penanganan Pertama:</h5>
+                            <h5>🩺 Langkah Penanganan Pertama:</h5>
                             <p id="treatmentText">-</p>
                         </div>
                         
                         <p class="disclaimer">⚠️ <b>Catatan Penting:</b> Hasil analisis AI ini bersifat screening awal, bukan pengganti diagnosa klinis Dokter Hewan.</p>
                     </div>
                     
-                    <!-- Tombol Download -->
                     <button class="btn-download" id="downloadBtn" onclick="downloadPDF()">📥 Download Hasil Diagnosa (PDF)</button>
                 </div>
             </section>
 
-            <!-- Kolom Kanan: Cara Penggunaan -->
             <section class="card instruction-section">
                 <h2>📖 Cara Penggunaan</h2>
                 <ol class="steps-list">
                     <li>
                         <span class="step-number">1</span>
-                        <p>Tekan tombol <b>Aktifkan Kamera</b> atau langsung klik kotak unggah untuk memilih file.</p>
+                        <p>Klik kotak area unggah atau tombol <b>Pilih Foto dari Galeri</b> untuk memasukkan foto.</p>
                     </li>
                     <li>
                         <span class="step-number">2</span>
-                        <p>Pastikan objek kulit kucing terkena cahaya terang dan terfokus.</p>
+                        <p>Pastikan bagian kulit kucing yang bermasalah terfoto dengan jelas dan fokus.</p>
                     </li>
                     <li>
                         <span class="step-number">3</span>
-                        <p>AI akan menganalisis foto dan memunculkan hasil serta rangkuman penanganan medisnya.</p>
+                        <p>AI akan otomatis mendeteksi foto dan memunculkan hasil analisis serta langkah penanganannya.</p>
                     </li>
                     <li>
                         <span class="step-number">4</span>
-                        <p>Klik tombol hijau di bawah untuk mengunduh laporan PDF resmi beserta lampiran foto.</p>
+                        <p>Klik tombol <b>Download Hasil Diagnosa</b> untuk menyimpannya sebagai berkas PDF resmi.</p>
                     </li>
                 </ol>
 
@@ -112,7 +94,6 @@
             </section>
         </main>
 
-        <!-- MENU RIWAYAT DIAGNOSA -->
         <section class="card history-section">
             <h2>📜 Riwayat Diagnosa Terakhir</h2>
             <div class="table-container">
@@ -134,7 +115,6 @@
             </div>
         </section>
 
-        <!-- FOOTER: INFORMASI UMUM -->
         <footer class="info-section">
             <div class="info-header">
                 <h2>Informasi & Cara Mengatasi Penyakit Kulit Umum</h2>
@@ -163,8 +143,5 @@
             </div>
         </footer>
     </div>
-
-    <!-- Canvas tersembunyi untuk memotong snapshot kamera -->
-    <canvas id="canvasElement" style="display:none;"></canvas>
 </body>
 </html>
