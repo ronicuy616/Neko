@@ -65,7 +65,6 @@ body {
     cursor: pointer;
     transition: background 0.3s;
 }
-
 .btn-primary:hover { background-color: #5B4CC4; }
 
 .btn-secondary {
@@ -77,7 +76,10 @@ body {
     font-weight: 600;
     cursor: pointer;
     width: 100%;
+    margin-top: 15px;
+    transition: 0.3s;
 }
+.btn-secondary:hover { background-color: #F4F2FF; }
 
 .btn-download {
     background-color: #00B894;
@@ -128,22 +130,33 @@ body {
     text-align: center;
     background: #FAFAFA;
     cursor: pointer;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+.drop-zone:hover {
+    border-color: #6C5CE7;
+    background-color: #FDFDFF;
 }
 
 .icon-cloud { font-size: 2.5rem; color: #A0AEC0; }
 .format-text { font-size: 0.8rem; color: #A0AEC0; margin-top: 5px; }
 
-#imagePreview {
-    max-width: 100%;
-    max-height: 220px;
+/* Kontainer Gambar Khusus Laporan PDF */
+.pdf-image-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background: #F8FAFC;
+    padding: 10px;
     border-radius: 8px;
-    object-fit: contain;
+    border: 1px dashed #CBD5E0;
+    margin-top: 10px;
 }
 
-.divider {
-    text-align: center;
-    margin: 15px 0;
-    color: #A0AEC0;
+#imagePreview {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 6px;
+    object-fit: contain;
 }
 
 /* List Instruksi */
@@ -211,40 +224,3 @@ th { background-color: #F8FAFC; color: #64748B; }
 .disease-card h4 { color: #6C5CE7; margin-bottom: 8px; }
 .disease-card .desc { font-size: 0.85rem; color: #4A5568; margin-bottom: 10px; font-weight: 500; }
 .disease-card .fix { font-size: 0.82rem; color: #718096; line-height: 1.4; }
-/* (Gunakan seluruh CSS dari jawaban sebelumnya, lalu tambahkan/ganti baris di bawah ini) */
-
-/* Pengaturan Tampilan Live Kamera Video */
-#videoElement {
-    width: 100%;
-    max-height: 300px;
-    border-radius: 12px;
-    object-fit: cover;
-    background-color: #000;
-}
-
-/* Kontainer Gambar Khusus Laporan PDF */
-.pdf-image-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    background: #F8FAFC;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px dashed #CBD5E0;
-    margin-top: 10px;
-}
-
-#imagePreview {
-    max-width: 100%;
-    max-height: 200px;
-    border-radius: 6px;
-    object-fit: contain;
-}
-
-/* Penyesuaian tombol ambil gambar */
-#captureBtn {
-    background-color: #FF7675;
-}
-#captureBtn:hover {
-    background-color: #E84393;
-}
