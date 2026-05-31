@@ -1,0 +1,250 @@
+/* Reset & Variabel */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #FAFAFD;
+    color: #2D3748;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Banner Utama */
+.banner {
+    background: #F4F2FF;
+    border: 1px solid #E4E0FC;
+    border-radius: 20px;
+    padding: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.banner-text h1 {
+    font-size: 2.2rem;
+    color: #1A1A2E;
+    line-height: 1.2;
+}
+
+.banner-text h1 span {
+    color: #6C5CE7;
+}
+
+.banner-text p {
+    color: #718096;
+    margin: 15px 0 25px 0;
+    max-width: 600px;
+}
+
+.banner-image img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid #FFFFFF;
+    box-shadow: 0 10px 20px rgba(108, 92, 231, 0.1);
+}
+
+/* Tombol-Tombol */
+.btn-primary {
+    background-color: #6C5CE7;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-primary:hover { background-color: #5B4CC4; }
+
+.btn-secondary {
+    background-color: #FFFFFF;
+    color: #6C5CE7;
+    border: 1px solid #6C5CE7;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn-download {
+    background-color: #00B894;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 15px;
+    transition: 0.3s;
+}
+.btn-download:hover { background-color: #009474; }
+
+/* Grid Main Layout */
+.main-content {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 768px) {
+    .banner { flex-direction: column; text-align: center; }
+    .banner-image { margin-top: 20px; }
+    .main-content { grid-template-columns: 1fr; }
+}
+
+.card {
+    background: white;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 30px;
+}
+
+.card h2 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    color: #1A1A2E;
+}
+
+/* Drop Zone Area */
+.drop-zone {
+    border: 2px dashed #CBD5E0;
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    background: #FAFAFA;
+    cursor: pointer;
+}
+
+.icon-cloud { font-size: 2.5rem; color: #A0AEC0; }
+.format-text { font-size: 0.8rem; color: #A0AEC0; margin-top: 5px; }
+
+#imagePreview {
+    max-width: 100%;
+    max-height: 220px;
+    border-radius: 8px;
+    object-fit: contain;
+}
+
+.divider {
+    text-align: center;
+    margin: 15px 0;
+    color: #A0AEC0;
+}
+
+/* List Instruksi */
+.steps-list { list-style: none; }
+.steps-list li { display: flex; align-items: flex-start; margin-bottom: 18px; }
+.step-number {
+    background: #EEEBFF; color: #6C5CE7; font-weight: bold;
+    border-radius: 50%; width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    margin-right: 15px; flex-shrink: 0;
+}
+
+.tips-box {
+    background-color: #F4F2FF;
+    border-left: 4px solid #6C5CE7;
+    padding: 15px; border-radius: 8px; font-size: 0.9rem;
+}
+
+/* Kotak Laporan Diagnosa */
+.result-box {
+    margin-top: 25px;
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 25px;
+    border: 1px solid #6C5CE7;
+}
+
+.report-title { color: #1A1A2E; margin-bottom: 5px; font-size: 1.1rem; }
+.report-date { font-size: 0.8rem; color: #718096; margin-bottom: 10px; }
+
+.progress-bar-container {
+    background: #E2E8F0; border-radius: 10px;
+    overflow: hidden; margin: 15px 0;
+}
+
+.progress-bar {
+    background: #6C5CE7; color: white; text-align: right;
+    padding: 3px 10px; font-size: 0.8rem; width: 0%;
+    transition: width 0.5s ease;
+}
+
+.treatment-box {
+    background-color: #F0FDF4; border: 1px solid #BBF7D0;
+    padding: 15px; border-radius: 8px; margin: 15px 0;
+}
+.treatment-box h5 { color: #166534; font-size: 0.95rem; margin-bottom: 5px; }
+.treatment-box p { color: #1F2937; font-size: 0.88rem; line-height: 1.4; }
+
+.disclaimer { font-size: 0.78rem; color: #94A3B8; }
+
+/* Menu Tabel Riwayat */
+.history-section { margin-bottom: 30px; }
+.table-container { overflow-x: auto; }
+table {
+    width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left;
+}
+th, td { padding: 12px 15px; border-bottom: 1px solid #E2E8F0; font-size: 0.9rem; }
+th { background-color: #F8FAFC; color: #64748B; }
+
+/* Grid Penyakit Bawah */
+.info-section { background: white; padding: 30px; border-radius: 16px; border: 1px solid #E2E8F0; }
+.info-header { margin-bottom: 20px; }
+.grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+.disease-card { background: #FAFAFD; border: 1px solid #E2E8F0; padding: 20px; border-radius: 12px; }
+.disease-card h4 { color: #6C5CE7; margin-bottom: 8px; }
+.disease-card .desc { font-size: 0.85rem; color: #4A5568; margin-bottom: 10px; font-weight: 500; }
+.disease-card .fix { font-size: 0.82rem; color: #718096; line-height: 1.4; }
+/* (Gunakan seluruh CSS dari jawaban sebelumnya, lalu tambahkan/ganti baris di bawah ini) */
+
+/* Pengaturan Tampilan Live Kamera Video */
+#videoElement {
+    width: 100%;
+    max-height: 300px;
+    border-radius: 12px;
+    object-fit: cover;
+    background-color: #000;
+}
+
+/* Kontainer Gambar Khusus Laporan PDF */
+.pdf-image-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background: #F8FAFC;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px dashed #CBD5E0;
+    margin-top: 10px;
+}
+
+#imagePreview {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 6px;
+    object-fit: contain;
+}
+
+/* Penyesuaian tombol ambil gambar */
+#captureBtn {
+    background-color: #FF7675;
+}
+#captureBtn:hover {
+    background-color: #E84393;
+}

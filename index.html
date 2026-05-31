@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deteksi Penyakit Kulit Kucing dengan AI</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Pustaka Analisis AI & Export PDF -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <!-- HEADER / BANNER UTAMA -->
+        <header class="banner">
+            <div class="banner-text">
+                <h1>Deteksi Penyakit Kulit <br><span>pada Kucing</span> dengan AI</h1>
+                <p>Unggah foto kulit kucing Anda dan dapatkan analisis cepat serta informasi penyakit kulit yang kemungkinan dialami.</p>
+                <button class="btn-primary" onclick="focusUpload()">📁 Mulai Deteksi</button>
+            </div>
+            <div class="banner-image">
+                <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?fm=jpg&q=60&w=400" alt="Kucing">
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- Kolom Kiri: Deteksi -->
+            <section class="card upload-section">
+                <h2>🔍 Deteksi Penyakit Kulit</h2>
+                
+                <!-- Drop Zone / Kamera View -->
+                <div class="drop-zone" id="dropZone">
+                    <div class="drop-zone-content" id="dropZoneContent">
+                        <div class="icon-cloud">☁️</div>
+                        <p><b>Klik atau seret foto ke sini untuk mengunggah</b></p>
+                        <p class="format-text">Format: JPG, PNG, WEBP (Maks. 5MB)</p>
+                    </div>
+                    
+                    <!-- Element Video untuk Live Kamera -->
+                    <video id="videoElement" autoplay playsinline hidden></video>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <!-- Tombol Ambil Gambar saat Kamera Aktif -->
+                <button class="btn-primary" id="captureBtn" onclick="captureFromCamera()" style="display:none; width:100%; margin-top:10px;">📸 Ambil Foto Sekarang</button>
+
+                <div class="divider" id="uiDivider"><span>atau</span></div>
+
+                <div class="action-buttons" id="actionButtons">
+                    <button class="btn-secondary" onclick="openCamera()">📷 Aktifkan Kamera</button>
+                </div>
+
+                <!-- HASIL DIAGNOSA (Area Unduh PDF) -->
+                <div class="result-box" id="resultBox" hidden>
+                    <div id="pdfArea" style="padding: 15px; background: #ffffff;">
+                        <h3 class="report-title">📄 LAPORAN HASIL DIAGNOSA AI</h3>
+                        <p class="report-date" id="reportDate"></p>
+                        <hr style="border: 0; border-top: 1px solid #E2E8F0; margin: 10px 0;">
+                        
+                        <!-- Gambar Kucing diletakkan di sini agar ikut masuk PDF -->
+                        <div class="pdf-image-container">
+                            <img id="imagePreview" src="" alt="Sampel Kulit Kucing">
+                        </div>
+
+                        <p id="predictionText" style="margin-top:15px;">Memproses...</p>
+                        
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="progressBar">0%</div>
+                        </div>
+
+                        <!-- Tips Penanganan -->
+                        <div class="treatment-box" id="treatmentBox">
+                            <h5>Zx Langkah Penanganan Pertama:</h5>
+                            <p id="treatmentText">-</p>
+                        </div>
+                        
+                        <p class="disclaimer">⚠️ <b>Catatan Penting:</b> Hasil analisis AI ini bersifat screening awal, bukan pengganti diagnosa klinis Dokter Hewan.</p>
+                    </div>
+                    
+                    <!-- Tombol Download -->
+                    <button class="btn-download" id="downloadBtn" onclick="downloadPDF()">📥 Download Hasil Diagnosa (PDF)</button>
+                </div>
+            </section>
+
+            <!-- Kolom Kanan: Cara Penggunaan -->
+            <section class="card instruction-section">
+                <h2>📖 Cara Penggunaan</h2>
+                <ol class="steps-list">
+                    <li>
+                        <span class="step-number">1</span>
+                        <p>Tekan tombol <b>Aktifkan Kamera</b> atau langsung klik kotak unggah untuk memilih file.</p>
+                    </li>
+                    <li>
+                        <span class="step-number">2</span>
+                        <p>Pastikan objek kulit kucing terkena cahaya terang dan terfokus.</p>
+                    </li>
+                    <li>
+                        <span class="step-number">3</span>
+                        <p>AI akan menganalisis foto dan memunculkan hasil serta rangkuman penanganan medisnya.</p>
+                    </li>
+                    <li>
+                        <span class="step-number">4</span>
+                        <p>Klik tombol hijau di bawah untuk mengunduh laporan PDF resmi beserta lampiran foto.</p>
+                    </li>
+                </ol>
+
+                <div class="tips-box">
+                    💡 <b>Pastikan foto fokus, tidak buram, dan area kulit terlihat jelas.</b>
+                </div>
+            </section>
+        </main>
+
+        <!-- MENU RIWAYAT DIAGNOSA -->
+        <section class="card history-section">
+            <h2>📜 Riwayat Diagnosa Terakhir</h2>
+            <div class="table-container">
+                <table id="historyTable">
+                    <thead>
+                        <tr>
+                            <th>Waktu</th>
+                            <th>Hasil Diagnosa AI</th>
+                            <th>Tingkat Akurasi</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyBody">
+                        <tr id="emptyHistory">
+                            <td colspan="4" style="text-align: center; color: #A0AEC0; padding: 20px;">Belum ada diagnosa yang dilakukan.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- FOOTER: INFORMASI UMUM -->
+        <footer class="info-section">
+            <div class="info-header">
+                <h2>Informasi & Cara Mengatasi Penyakit Kulit Umum</h2>
+            </div>
+            <div class="grid-cards">
+                <div class="disease-card">
+                    <h4>Ringworm (Kurap)</h4>
+                    <p class="desc">Infeksi jamur melingkar bersisik.</p>
+                    <p class="fix"><b>Solusi:</b> Mandikan dengan sampo antijamur (Ketoconazole/Miconazole), oleskan salep jamur, dan isolasi agar tidak menular.</p>
+                </div>
+                <div class="disease-card">
+                    <h4>Alergi (Dermatitis)</h4>
+                    <p class="desc">Reaksi gatal akibat pakan atau kutu.</p>
+                    <p class="fix"><b>Solusi:</b> Berikan obat anti-kutu rutin, ganti ke pakan khusus hipoalergenik (*grain-free*), dan bersihkan kandang.</p>
+                </div>
+                <div class="disease-card">
+                    <h4>Scabies (Kudis)</h4>
+                    <p class="desc">Infestasi tungau penyebab kerak keras.</p>
+                    <p class="fix"><b>Solusi:</b> Suntik/tetes antiparasit (*Ivermectin* atau *Selamectin*) sesuai resep dokter, potong kuku kucing, sterilkan lingkungan.</p>
+                </div>
+                <div class="disease-card">
+                    <h4>Hotspot</h4>
+                    <p class="desc">Luka basah akibat garukan berlebih.</p>
+                    <p class="fix"><b>Solusi:</b> Cukur bulu di sekitar luka, bersihkan dengan antiseptik aman, pakaikan *Elizabeth Collar* (corong leher) agar tidak dijilat.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Canvas tersembunyi untuk memotong snapshot kamera -->
+    <canvas id="canvasElement" style="display:none;"></canvas>
+</body>
+</html>
