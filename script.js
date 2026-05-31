@@ -1,12 +1,6 @@
 const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
 const dropZoneContent = document.getElementById('dropZoneContent');
-const videoElement = document.getElementById('videoElement');
-const canvasElement = document.getElementById('canvasElement');
-const captureBtn = document.getElementById('captureBtn');
-const actionButtons = document.getElementById('actionButtons');
-const uiDivider = document.getElementById('uiDivider');
-
 const imagePreview = document.getElementById('imagePreview');
 const resultBox = document.getElementById('resultBox');
 const predictionText = document.getElementById('predictionText');
@@ -16,7 +10,6 @@ const reportDate = document.getElementById('reportDate');
 const historyBody = document.getElementById('historyBody');
 const emptyHistory = document.getElementById('emptyHistory');
 
-let localStream = null;
 const LABELS = ["Ringworm (Kurap)", "Alergi (Dermatitis)", "Scabies (Kudis)", "Hotspot"];
 
 const TREATMENT_DB = {
@@ -26,11 +19,33 @@ const TREATMENT_DB = {
     "Hotspot": "Cukur bulu di sekitar titik luka basah agar sirkulasi udara lancar dan luka lekas mengering. Bersihkan area radang menggunakan antiseptik ringan (khusus hewan). Wajib pakaikan Elizabeth Collar (corong leher) agar kucing tidak terus-menerus menjilati lukanya."
 };
 
-// 1. INPUT VIA UNGHAHAN FILE
-dropZone.addEventListener('click', () => {
-    if (localStream === null) fileInput.click();
-});
+// 1. MANAJEMEN INPUT UNGGAL FILE & DRAG DROP
+dropZone.addEventListener('click', () => fileInput.click());
+
+// Mendeteksi ketika file dipilih lewat explorer berkas
 fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+
+// Event Drag over
+dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.style.borderColor = '#6C5CE7';
+});
+
+// Event Drag leave
+dropZone.addEventListener('dragleave', () => {
+    dropZone.style.borderColor = '#CBD5E0';
+});
+
+// Event Drop berkas gambar
+dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.style.borderColor = '#CBD5E0';
+    handleFiles(e.dataTransfer.files);
+});
+
+function triggerUploadClick() {
+    fileInput.click();
+}
 
 function focusUpload() {
     dropZone.scrollIntoView({ behavior: 'smooth' });
@@ -40,70 +55,21 @@ function handleFiles(files) {
     if (files.length === 0) return;
     const file = files[0];
 
+    if (!file.type.startsWith('image/')) {
+        alert('Mohon unggah berkas berupa gambar yang valid!');
+        return;
+    }
+
     const reader = new FileReader();
     reader.onload = (e) => {
+        // Mengisi source gambar pratinjau yang nempel di layout PDF berkas
         imagePreview.src = e.target.result;
-        stopCamera(); // Matikan kamera jika user beralih mengunggah file
-        dropZoneContent.style.display = 'none';
         runAiAnalysis();
     };
     reader.readAsDataURL(file);
 }
 
-// 2. INPUT VIA KAMERA ASLI (HARDWARE ACCESS)
-async function openCamera() {
-    try {
-        // Meminta izin akses hardware kamera video
-        localStream = await navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: "environment" }, // Prioritaskan kamera belakang untuk HP
-            audio: false 
-        });
-        videoElement.srcObject = localStream;
-        videoElement.hidden = false;
-        dropZoneContent.style.display = 'none';
-        
-        // Atur Kontrol Tombol UI
-        captureBtn.style.display = 'block';
-        actionButtons.style.display = 'none';
-        uiDivider.style.display = 'none';
-    } catch (err) {
-        alert("Gagal mengakses Kamera. Pastikan Anda memberikan izin akses kamera atau jalankan aplikasi ini di server lokal/HTTPS.");
-        console.error(err);
-    }
-}
-
-function captureFromCamera() {
-    if (!localStream) return;
-
-    // Menyesuaikan ukuran resolusi canvas dengan video feed
-    canvasElement.width = videoElement.videoWidth;
-    canvasElement.height = videoElement.videoHeight;
-    
-    // Menggambar frame video ke canvas
-    const context = canvasElement.getContext('2d');
-    context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
-    
-    // Mengubah hasil snapshot canvas ke format base64 gambar
-    const dataURL = canvasElement.toDataURL('image/jpeg');
-    imagePreview.src = dataURL;
-    
-    // Matikan streaming kamera setelah foto diambil
-    stopCamera();
-    runAiAnalysis();
-}
-
-function stopCamera() {
-    if (localStream) {
-        localStream.getTracks().forEach(track => track.stop());
-        localStream = null;
-    }
-    videoElement.hidden = true;
-    captureBtn.style.display = 'none';
-    actionButtons.style.display = 'block';
-    uiDivider.style.display = 'block';
-}
-
-// 3. ENGINE PROSES ANALISIS DETEKSI AI
+// 2. ENGINE ANALISIS DETEKSI AI
 function runAiAnalysis() {
     resultBox.hidden = false;
     predictionText.innerHTML = "🔍 AI sedang menganalisis sampel jaringan kulit...";
@@ -115,6 +81,7 @@ function runAiAnalysis() {
     reportDate.innerText = "Waktu Pemeriksaan: " + sekarang.toLocaleString('id-ID');
 
     setTimeout(() => {
+        // Logika Klasifikasi berbasis probabilitas acak terkontrol (dapat dihubungkan dengan model .json real Anda)
         const randomIndex = Math.floor(Math.random() * LABELS.length);
         const hasilPenyakit = LABELS[randomIndex];
         const akurasiAcak = (Math.random() * (99.5 - 84.0) + 84.0).toFixed(2);
@@ -142,18 +109,17 @@ function tambahKeMenuRiwayat(waktu, penyakit, akurasi) {
     historyBody.insertBefore(row, historyBody.firstChild);
 }
 
-// 4. DOWNLOAD HASIL DIAGNOSA KOMPLIT (TERMASUK GAMBARNYA)
+// 3. EKSPOR DATA DAN PREVIEW GAMBAR SECARA NYATA KE PDF
 function downloadPDF() {
     const element = document.getElementById('pdfArea');
     
-    // Konfigurasi presisi agar gambar ter-render sempurna di PDF tanpa pecah
     const opsiKompresi = {
         margin:       10,
         filename:     'Laporan_Diagnosa_Kucing_AI.pdf',
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { 
             scale: 2, 
-            useCORS: true, // Izinkan rendering gambar lintas origin jika ada url luar
+            useCORS: true, 
             logging: false 
         },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
